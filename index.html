@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses Tracker | Personal Finance Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-wallet"></i> Expenses Tracker</h1>
+                <p class="subtitle">Track your spending, manage your budget</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Expenses</div>
+                    <div class="stat-value" id="total-expenses">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">This Month</div>
+                    <div class="stat-value" id="month-expenses">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average Daily</div>
+                    <div class="stat-value" id="daily-average">$0.00</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="app-content">
+            <div class="left-panel">
+                <div class="section-card">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Expense</h2>
+                    <form id="expense-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expense-name"><i class="fas fa-tag"></i> Description</label>
+                                <input type="text" id="expense-name" placeholder="What did you spend on?" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="expense-amount"><i class="fas fa-dollar-sign"></i> Amount</label>
+                                <input type="number" id="expense-amount" min="0.01" step="0.01" placeholder="0.00" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expense-category"><i class="fas fa-list-alt"></i> Category</label>
+                                <select id="expense-category" required>
+                                    <option value="">Select a category</option>
+                                    <option value="Food & Dining">Food & Dining</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Housing">Housing</option>
+                                    <option value="Utilities">Utilities</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option valueHealthcare">Healthcare</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Personal Care">Personal Care</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="expense-date"><i class="fas fa-calendar-alt"></i> Date</label>
+                                <input type="date" id="expense-date" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-notes"><i class="fas fa-sticky-note"></i> Notes (Optional)</label>
+                            <textarea id="expense-notes" rows="2" placeholder="Add any additional details..."></textarea>
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <button type="submit" id="add-expense-btn" class="btn-primary">
+                                <i class="fas fa-plus"></i> Add Expense
+                            </button>
+                            <button type="button" id="reset-form-btn" class="btn-secondary">
+                                <i class="fas fa-redo"></i> Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="section-card">
+                    <h2><i class="fas fa-chart-pie"></i> Expenses by Category</h2>
+                    <div class="chart-container">
+                        <canvas id="category-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2><i class="fas fa-history"></i> Recent Expenses</h2>
+                        <div class="filter-controls">
+                            <select id="filter-category">
+                                <option value="all">All Categories</option>
+                                <option value="Food & Dining">Food & Dining</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Housing">Housing</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Education">Education</option>
+                                <option value="Personal Care">Personal Care</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <select id="filter-month">
+                                <option value="all">All Time</option>
+                                <option value="current">Current Month</option>
+                                <option value="last">Last Month</option>
+                                <option value="january">January</option>
+                                <option value="february">February</option>
+                                <option value="march">March</option>
+                                <option value="april">April</option>
+                                <option value="may">May</option>
+                                <option value="june">June</option>
+                                <option value="july">July</option>
+                                <option value="august">August</option>
+                                <option value="september">September</option>
+                                <option value="october">October</option>
+                                <option value="november">November</option>
+                                <option value="december">December</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="expenses-list" id="expenses-list">
+                        <div class="empty-state">
+                            <i class="fas fa-receipt"></i>
+                            <h3>No expenses yet</h3>
+                            <p>Add your first expense using the form on the left</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-info">
+                        <div class="summary-item">
+                            <span>Total shown:</span>
+                            <span id="shown-total">$0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Number of expenses:</span>
+                            <span id="expense-count">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-card">
+                    <h2><i class="fas fa-calendar-week"></i> Monthly Overview</h2>
+                    <div class="chart-container">
+                        <canvas id="monthly-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-panel">
+            <div class="section-card">
+                <h2><i class="fas fa-chart-line"></i> Spending Trends</h2>
+                <div class="trends-container">
+                    <div class="trend-item">
+                        <div class="trend-label">Highest Spending Category</div>
+                        <div class="trend-value" id="highest-category">--</div>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-label">Most Expensive Item</div>
+                        <div class="trend-value" id="most-expensive">--</div>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-label">Average Expense</div>
+                        <div class="trend-value" id="average-expense">$0.00</div>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-label">Expenses This Week</div>
+                        <div class="trend-value" id="week-expenses">$0.00</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-cogs"></i> Quick Actions</h2>
+                </div>
+                <div class="action-buttons">
+                    <button id="export-data" class="action-btn">
+                        <i class="fas fa-file-export"></i> Export Data
+                    </button>
+                    <button id="clear-all" class="action-btn">
+                        <i class="fas fa-trash-alt"></i> Clear All Expenses
+                    </button>
+                    <button id="add-sample" class="action-btn">
+                        <i class="fas fa-vial"></i> Add Sample Data
+                    </button>
+                    <button id="set-budget" class="action-btn">
+                        <i class="fas fa-chart-bar"></i> Set Monthly Budget
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="app-footer">
+            <p>Expenses Tracker v1.0 • Made with <i class="fas fa-heart"></i> using Vanilla JavaScript</p>
+            <p class="storage-info">Data is stored locally in your browser</p>
+        </footer>
+    </div>
+
+    <!-- Edit Expense Modal -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Edit Expense</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-expense-form">
+                    <input type="hidden" id="edit-expense-id">
+                    <div class="form-group">
+                        <label for="edit-expense-name">Description</label>
+                        <input type="text" id="edit-expense-name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-expense-amount">Amount</label>
+                            <input type="number" id="edit-expense-amount" min="0.01" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-expense-category">Category</label>
+                            <select id="edit-expense-category" required>
+                                <option value="Food & Dining">Food & Dining</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Housing">Housing</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Education">Education</option>
+                                <option value="Personal Care">Personal Care</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-expense-date">Date</label>
+                            <input type="date" id="edit-expense-date" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-expense-notes">Notes</label>
+                        <textarea id="edit-expense-notes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary close-modal">Cancel</button>
+                <button id="save-edit-btn" class="btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Budget Modal -->
+    <div class="modal" id="budget-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-chart-bar"></i> Set Monthly Budget</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="budget-info">
+                    <p>Set a monthly budget to track your spending against your financial goals.</p>
+                    <div class="form-group">
+                        <label for="monthly-budget">Monthly Budget Amount ($)</label>
+                        <input type="number" id="monthly-budget" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="budget-status" id="budget-status">
+                        <!-- Budget status will be shown here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary close-modal">Cancel</button>
+                <button id="save-budget-btn" class="btn-primary">Save Budget</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content confirm-modal">
+            <div class="modal-body">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3 id="confirm-title">Confirm Action</h3>
+                <p id="confirm-message">Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-cancel" class="btn-secondary">Cancel</button>
+                <button id="confirm-ok" class="btn-danger">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
