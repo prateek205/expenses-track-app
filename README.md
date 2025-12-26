@@ -27,7 +27,7 @@ The app allows users to add, view, and manage expenses while tracking total inco
 - Reusable functions for clean code
 
 ## 📺 Live Demo
-URL: https://your-expense-tracker.vercel.app
+URL: https://expenses-track-app.vercel.app/
 
 
 ## 📁 Project Structure
